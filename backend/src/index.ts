@@ -1,6 +1,8 @@
 import express from "express";
 import taskRoutes from "./routes/taskRoutes";
 import { errorHandler } from "./middleware/errorMiddleware";
+import dotenv from "dotenv";
+dotenv.config();
 
 const app = express();
 const port = 3001;
