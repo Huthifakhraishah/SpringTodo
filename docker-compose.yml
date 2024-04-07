@@ -10,11 +10,14 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
   backend:
     build:
       context: ./backend
     ports:
       - "3001:3001"
+    environment:
+      DATABASE_URL: postgres://user:password@db:5432/spring_todo_db
     depends_on:
       - db
   frontend:
