@@ -1,15 +1,18 @@
-import { expressjwt } from "express-jwt";
-import jwksRsa from "jwks-rsa";
+import { expressjwt, GetVerificationKey } from "express-jwt";
+import { expressJwtSecret } from "jwks-rsa";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const checkJwt = expressjwt({
-  secret: jwksRsa.expressJwtSecret({
+  secret: expressJwtSecret({
     cache: true,
     rateLimit: true,
     jwksRequestsPerMinute: 5,
-    jwksUri: `https://YOUR_AUTH0_DOMAIN/.well-known/jwks.json`,
-  }),
-  audience: "YOUR_API_AUDIENCE_IDENTIFIER",
-  issuer: `https://YOUR_AUTH0_DOMAIN/`,
+    jwksUri: `https://${process.env.AUTH0_DOMAIN}/.well-known/jwks.json`,
+  }) as GetVerificationKey,
+  audience: process.env.AUTH0_AUDIENCE,
+  issuer: `https://${process.env.AUTH0_DOMAIN}/`,
   algorithms: ["RS256"],
 });
 
