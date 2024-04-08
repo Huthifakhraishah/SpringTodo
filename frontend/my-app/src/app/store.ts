@@ -1,14 +1,13 @@
-// import { configureStore } from "@reduxjs/toolkit";
-// import { setupListeners } from "@reduxjs/toolkit/query";
-// import { counterApi } from "../features/counter/counterApi";
+import { configureStore } from "@reduxjs/toolkit";
+import { apiClient } from "../services/apiClient";
 
-// export const store = configureStore({
-//   reducer: {
-//     // Add your reducers here
-//     [counterApi.reducerPath]: counterApi.reducer,
-//   },
-//   middleware: (getDefaultMiddleware) =>
-//     getDefaultMiddleware().concat(counterApi.middleware),
-// });
+export const store = configureStore({
+  reducer: {
+    [apiClient.reducerPath]: apiClient.reducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(apiClient.middleware),
+});
 
-// setupListeners(store.dispatch);
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
