@@ -1,12 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-
-interface Task {
-  id: string;
-  title: string;
-  description: string;
-  status: "TODO" | "IN PROGRESS" | "COMPLETED";
-  deadline: string;
-}
+import { Task } from "../types";
 
 const baseUrl = "http://localhost:3001";
 

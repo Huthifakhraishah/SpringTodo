@@ -12,8 +12,11 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
   backend:
+    env_file:
+      - ./backend/src/.env
     build:
       context: ./backend
+      dockerfile: Dockerfile
     ports:
       - "3001:3001"
     environment:
@@ -22,7 +25,8 @@ services:
       - db
   frontend:
     build:
-      context: ./frontend
+      context: ./frontend/my-app
+      dockerfile: ../Dockerfile
     ports:
       - "80:80"
     depends_on:
