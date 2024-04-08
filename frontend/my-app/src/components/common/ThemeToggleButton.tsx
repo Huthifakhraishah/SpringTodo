@@ -12,7 +12,7 @@ const ThemeToggleButton: React.FC = () => {
 
   return (
     <FormControlLabel
-      control={<Switch onChange={handleChange} />}
+      control={<Switch onChange={handleChange} defaultChecked={true} />}
       label="Toggle theme"
     />
   );

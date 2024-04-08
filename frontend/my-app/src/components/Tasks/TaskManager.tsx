@@ -4,56 +4,61 @@ import TaskEditModal from "../Tasks/TaskEditModal";
 import { TaskList } from "../Tasks/TaskList";
 import { Fab } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import {
+  useGetTasksQuery,
+  useAddTaskMutation,
+  useUpdateTaskMutation,
+  useDeleteTaskMutation,
+} from "../../features/tasks/tasksApi";
 
 const TaskManager: React.FC = () => {
-  const [openModal, setOpenModal] = useState(false);
-  const [currentTask, setCurrentTask] = useState<Task | undefined>();
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [currentTask, setCurrentTask] = useState<Task | undefined>(undefined);
+
+  const { data: tasks, isLoading, error, refetch } = useGetTasksQuery();
+
+  const [addTask] = useAddTaskMutation();
+  const [updateTask] = useUpdateTaskMutation();
+  const [deleteTask] = useDeleteTaskMutation();
 
   const handleOpenCreateModal = () => {
-    setCurrentTask(undefined);
+    setCurrentTask(undefined); // Prepare for creating a new task
     setOpenModal(true);
   };
 
-  const handleSaveTask = (savedTask: Task) => {
-    if (currentTask) {
-      setTasks((prev) =>
-        prev.map((task) => (task.id === savedTask.id ? savedTask : task))
-      );
+  const handleSaveTask = async (task: Task) => {
+    if (task.id) {
+      await updateTask({ id: task.id, data: task }).unwrap();
     } else {
-      setTasks((prev) => [
-        ...prev,
-        { ...savedTask, id: Date.now().toString() },
-      ]);
+      await addTask(task).unwrap();
     }
     setOpenModal(false);
+    refetch(); // Refetch tasks list to update UI
   };
 
-  const handleEditModalOpen = (task: Task) => {
-    setCurrentTask(task);
+  const handleEditTask = (task: Task) => {
+    setCurrentTask(task); // Set current task for editing
     setOpenModal(true);
   };
 
-  const handleDrop = (id: string, newStatus: TaskStatus) => {
-    setTasks((prev) =>
-      prev.map((task) =>
-        task.id === id ? { ...task, status: newStatus } : task
-      )
-    );
-  };
-
-  const handleDeleteTask = (id: string) => {
-    setTasks((prev) => prev.filter((task) => task.id !== id));
+  const handleDeleteTask = async (taskId: string) => {
+    await deleteTask(taskId).unwrap();
+    refetch(); // Refetch tasks list to update UI
   };
 
   return (
     <>
-      <TaskList
-        tasks={tasks}
-        onEdit={handleEditModalOpen}
-        onDrop={handleDrop}
-        onDelete={handleDeleteTask}
-      />
+      {error ? (
+        <div>Error fetching tasks</div>
+      ) : isLoading ? (
+        <div>Loading...</div>
+      ) : (
+        <TaskList
+          tasks={tasks || []}
+          onEdit={handleEditTask}
+          onDelete={handleDeleteTask}
+        />
+      )}
       <Fab
         color="primary"
         aria-label="add"

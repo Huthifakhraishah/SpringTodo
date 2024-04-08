@@ -4,7 +4,7 @@ import TaskColumn from "./TaskColumn";
 import {
   useGetTasksQuery,
   useUpdateTaskMutation,
-} from "../../services/apiClient";
+} from "../../features/tasks/tasksApi";
 import { Task, TaskStatus } from "../../types";
 
 const taskColumns = [
