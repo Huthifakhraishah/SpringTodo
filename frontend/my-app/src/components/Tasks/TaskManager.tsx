@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Task, TaskStatus } from "../../types/index";
 import TaskEditModal from "../Tasks/TaskEditModal";
 import { TaskList } from "../Tasks/TaskList";
-import { Fab } from "@mui/material";
+import { Fab, Grid } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import {
   useGetTasksQuery,
@@ -59,7 +59,7 @@ const TaskManager: React.FC = () => {
   };
 
   return (
-    <>
+    <Grid container marginTop={10}>
       {error ? (
         <div>Error fetching tasks</div>
       ) : isLoading ? (
@@ -88,7 +88,7 @@ const TaskManager: React.FC = () => {
           onSave={handleSaveTask}
         />
       )}
-    </>
+    </Grid>
   );
 };
 
