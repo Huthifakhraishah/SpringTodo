@@ -36,9 +36,12 @@ This command will set up the entire application stack, including the database, b
 4.  Database Migrations:
 
 - After the containers are up, you need to run migrations to set up your database schema. Navigate to the `backend/prisma` folder and run:
+
   ```bash
+  cd backend && cd src && cd prisma
   npx prisma migrate dev
   ```
+
   This command applies the migrations necessary for your PostgreSQL database.
 
 ## Accessing the Application
