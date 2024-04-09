@@ -33,6 +33,14 @@ docker-compose up --build
 
 This command will set up the entire application stack, including the database, backend, and frontend services, as defined in the `docker-compose.yml` file.
 
+4.  Database Migrations:
+
+- After the containers are up, you need to run migrations to set up your database schema. Navigate to the `backend/prisma` folder and run:
+  ```bash
+  npx prisma migrate dev
+  ```
+  This command applies the migrations necessary for your PostgreSQL database.
+
 ## Accessing the Application
 
 Once the application is running, you can access:
