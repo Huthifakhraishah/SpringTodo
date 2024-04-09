@@ -27,6 +27,11 @@ const DialogTitleCentered = styled(DialogTitle)({
   textAlign: "center",
 });
 
+function formatISODateTime(dateString: string) {
+  const date = new Date(dateString);
+  return date.toISOString();
+}
+
 const TaskEditModal: React.FC<TaskEditModalProps> = ({
   task,
   open,
@@ -43,13 +48,14 @@ const TaskEditModal: React.FC<TaskEditModalProps> = ({
   });
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const userId = parseInt(localStorage.getItem("userId") || "1");
 
   React.useEffect(() => {
     reset(task);
   }, [task, reset]);
 
   const onSubmit = (data: Task) => {
-    onSave(data);
+    onSave({ ...data, userId, deadline: formatISODateTime(data.deadline) });
     onClose();
   };
 

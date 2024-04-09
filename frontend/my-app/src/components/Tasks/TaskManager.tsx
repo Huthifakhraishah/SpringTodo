@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Task, TaskStatus } from "../../types/index";
 import TaskEditModal from "../Tasks/TaskEditModal";
 import { TaskList } from "../Tasks/TaskList";
@@ -10,19 +10,20 @@ import {
   useUpdateTaskMutation,
   useDeleteTaskMutation,
 } from "../../features/tasks/tasksApi";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const TaskManager: React.FC = () => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [currentTask, setCurrentTask] = useState<Task | undefined>(undefined);
-
-  const { data: tasks, isLoading, error, refetch } = useGetTasksQuery();
+  const userId = localStorage.getItem("userId") ?? "3";
+  const { data: tasks, isLoading, error, refetch } = useGetTasksQuery(userId);
 
   const [addTask] = useAddTaskMutation();
   const [updateTask] = useUpdateTaskMutation();
   const [deleteTask] = useDeleteTaskMutation();
 
   const handleOpenCreateModal = () => {
-    setCurrentTask(undefined); // Prepare for creating a new task
+    setCurrentTask(undefined);
     setOpenModal(true);
   };
 
@@ -33,17 +34,28 @@ const TaskManager: React.FC = () => {
       await addTask(task).unwrap();
     }
     setOpenModal(false);
-    refetch(); // Refetch tasks list to update UI
+    refetch();
   };
 
   const handleEditTask = (task: Task) => {
-    setCurrentTask(task); // Set current task for editing
+    setCurrentTask(task);
     setOpenModal(true);
   };
 
   const handleDeleteTask = async (taskId: string) => {
     await deleteTask(taskId).unwrap();
-    refetch(); // Refetch tasks list to update UI
+    refetch();
+  };
+
+  useEffect(() => {
+    if ((error as any)?.data?.messages === "No authorization token was found") {
+      refetch(); // Refetch tasks once the token is confirmed to be present.
+    }
+  }, [error]);
+
+  const handleDrop = (taskId: string, newStatus: TaskStatus) => {
+    const task = tasks?.filter((task) => `${task.id}` === `${taskId}`)[0];
+    updateTask({ id: taskId, data: { ...task, status: newStatus } });
   };
 
   return (
@@ -57,6 +69,7 @@ const TaskManager: React.FC = () => {
           tasks={tasks || []}
           onEdit={handleEditTask}
           onDelete={handleDeleteTask}
+          onDrop={handleDrop}
         />
       )}
       <Fab

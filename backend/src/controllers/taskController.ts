@@ -4,7 +4,8 @@ import { handleError } from "../utils/handleError";
 
 export const getAllTasks = async (req: Request, res: Response) => {
   try {
-    const tasks = await TaskModel.getAllTasks();
+    const { id } = req.params;
+    const tasks = await TaskModel.getAllTasks(id);
     res.json(tasks);
   } catch (error: unknown) {
     const errorMessage = handleError(error);

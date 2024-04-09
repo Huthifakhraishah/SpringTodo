@@ -25,29 +25,6 @@ export const TaskList: React.FC<TaskListProps> = ({
   onDrop,
   onDelete,
 }) => {
-  //   const { data: tasks, isLoading, error } = useGetTasksQuery();
-  // const [updateTask] = useUpdateTaskMutation();
-
-  // const handleDrop = (task: Task, newStatus: TaskStatus) => {
-  //   updateTask({ id: task.id, data: { ...task, status: newStatus } });
-  // };
-
-  //   if (error)
-  //     return (
-  //       <Typography variant="h6" color="error" textAlign="center">
-  //         Error fetching tasks
-  //       </Typography>
-  //     );
-
-  //   if (isLoading || !tasks?.length)
-  //     return (
-  //       <Paper elevation={3} sx={{ p: 3, mt: 3, textAlign: "center" }}>
-  //         <Typography variant="h6">
-  //           No tasks found. Start by adding a new task!
-  //         </Typography>
-  //       </Paper>
-  //     );
-
   return (
     <Grid container spacing={2}>
       {taskColumns.map((column) => (
@@ -57,7 +34,6 @@ export const TaskList: React.FC<TaskListProps> = ({
             onEdit={onEdit}
             title={column.title}
             tasks={tasks.filter((task) => task.status === column.status)}
-            // tasks={tasks?.filter((task) => task.status === column.status) || []}
             onDrop={(task) => onDrop(task, column.status)}
           />
         </Grid>

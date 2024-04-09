@@ -1,6 +1,6 @@
 export enum TaskStatus {
   Todo = "TODO",
-  InProgress = "IN PROGRESS",
+  InProgress = "IN_PROGRESS",
   Completed = "COMPLETED",
 }
 
@@ -10,6 +10,7 @@ export interface Task {
   description: string;
   status: TaskStatus;
   deadline: string;
+  userId: number;
 }
 
 export interface TaskColumnProps {
